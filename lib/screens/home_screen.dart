@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_theme.dart';
+import '../utils/responsive.dart';
 import '../widgets/music_control_widget.dart';
 import 'calendar_screen.dart';
 import 'report_screen.dart';
@@ -29,21 +30,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.initState();
     AppTheme.currentMode = AppTheme.getAutoTheme();
     _cardController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
+      vsync: this, duration: const Duration(milliseconds: 800));
     _cardFade = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _cardController, curve: Curves.easeOut),
-    );
+      CurvedAnimation(parent: _cardController, curve: Curves.easeOut));
     _loadUserData();
     _cardController.forward();
   }
 
   @override
-  void dispose() {
-    _cardController.dispose();
-    super.dispose();
-  }
+  void dispose() { _cardController.dispose(); super.dispose(); }
 
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -64,37 +59,36 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildThemePicker() {
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.all(R.sp(16)),
+      padding: EdgeInsets.all(R.sp(20)),
       decoration: BoxDecoration(
         color: AppTheme.cardColor,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(R.sp(28)),
         border: Border.all(color: AppTheme.primaryColor.withOpacity(0.3)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Choose Theme',
-              style: GoogleFonts.poppins(
-                  fontSize: 18, fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary)),
-          const SizedBox(height: 20),
+          Text('Choose Theme', style: GoogleFonts.poppins(
+              fontSize: R.font(18), fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary)),
+          SizedBox(height: R.sp(20)),
           Row(
             children: [
               _themeOption(mode: AppThemeMode.morning,
                   icon: Icons.wb_sunny_rounded, label: 'Morning',
                   gradient: [const Color(0xFFFF8C42), const Color(0xFFFFD700)]),
-              const SizedBox(width: 10),
+              SizedBox(width: R.sp(10)),
               _themeOption(mode: AppThemeMode.afternoon,
                   icon: Icons.wb_cloudy_rounded, label: 'Midday',
                   gradient: [const Color(0xFF4A90E2), const Color(0xFF00C9FF)]),
-              const SizedBox(width: 10),
+              SizedBox(width: R.sp(10)),
               _themeOption(mode: AppThemeMode.night,
                   icon: Icons.nightlight_round, label: 'Night',
                   gradient: [const Color(0xFF6C63FF), const Color(0xFF00D2FF)]),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: R.sp(8)),
         ],
       ),
     );
@@ -107,10 +101,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       child: GestureDetector(
         onTap: () { setState(() => AppTheme.currentMode = mode); Navigator.pop(context); },
         child: Container(
-          height: 86,
+          height: R.sp(86),
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(R.sp(16)),
             gradient: LinearGradient(colors: gradient,
                 begin: Alignment.topLeft, end: Alignment.bottomRight),
             border: isSelected ? Border.all(color: Colors.white, width: 2.5) : null,
@@ -118,11 +112,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white, size: 24),
-              const SizedBox(height: 4),
+              Icon(icon, color: Colors.white, size: R.icon(24)),
+              SizedBox(height: R.sp(4)),
               Text(label, style: GoogleFonts.poppins(
-                  fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white)),
-              if (isSelected) const Icon(Icons.check_circle, color: Colors.white, size: 13),
+                  fontSize: R.font(11), fontWeight: FontWeight.bold,
+                  color: Colors.white)),
+              if (isSelected)
+                Icon(Icons.check_circle, color: Colors.white, size: R.icon(13)),
             ],
           ),
         ),
@@ -222,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    R.init(context); // Initialize responsive helper
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
       color: AppTheme.background,
@@ -231,26 +228,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: FadeTransition(
             opacity: _cardFade,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(R.sp(20)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildHeader(),
-                  const SizedBox(height: 20),
+                  SizedBox(height: R.sp(20)),
                   _buildSleepScoreCard(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: R.sp(16)),
                   _buildSleepLogCard(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: R.sp(16)),
                   _buildQuickStats(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: R.sp(16)),
                   _buildSaveButton(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: R.sp(16)),
                   _buildNavigationCards(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: R.sp(16)),
                   MusicControlWidget(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: R.sp(16)),
                   _buildAboutButton(),
-                  const SizedBox(height: 20),
+                  SizedBox(height: R.sp(20)),
                 ],
               ),
             ),
@@ -272,22 +269,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('$greeting $emoji', style: GoogleFonts.poppins(
-                  fontSize: 13, color: AppTheme.textSecondary)),
+                  fontSize: R.font(13), color: AppTheme.textSecondary)),
               Text(displayName, overflow: TextOverflow.ellipsis, maxLines: 1,
-                  style: GoogleFonts.poppins(fontSize: 26,
+                  style: GoogleFonts.poppins(fontSize: R.font(24),
                       fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
             ],
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: R.sp(8)),
         GestureDetector(
           onTap: _switchTheme,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 400),
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(R.sp(10)),
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: AppTheme.gradientColors),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(R.sp(14)),
               boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.4),
                   blurRadius: 10, offset: const Offset(0, 4))],
             ),
@@ -295,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               AppTheme.currentMode == AppThemeMode.morning ? Icons.wb_sunny_rounded
                   : AppTheme.currentMode == AppThemeMode.afternoon ? Icons.wb_cloudy_rounded
                   : Icons.nightlight_round,
-              color: Colors.white, size: 24,
+              color: Colors.white, size: R.icon(24),
             ),
           ),
         ),
@@ -304,12 +301,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildSleepScoreCard() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
+    return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(R.sp(20)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(R.sp(24)),
         gradient: LinearGradient(colors: AppTheme.gradientColors,
             begin: Alignment.topLeft, end: Alignment.bottomRight),
         boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.4),
@@ -319,25 +315,25 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Tonight's Sleep", style: GoogleFonts.poppins(
-              fontSize: 13, color: Colors.white.withOpacity(0.8))),
-          const SizedBox(height: 6),
+              fontSize: R.font(13), color: Colors.white.withOpacity(0.8))),
+          SizedBox(height: R.sp(6)),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(_hoursSlept == 0 ? '--' : _hoursSlept.toStringAsFixed(1),
-                  style: GoogleFonts.poppins(fontSize: 52,
+                  style: GoogleFonts.poppins(fontSize: R.font(52),
                       fontWeight: FontWeight.bold, color: Colors.white, height: 1)),
               Padding(
-                padding: const EdgeInsets.only(bottom: 8, left: 6),
+                padding: EdgeInsets.only(bottom: R.sp(8), left: R.sp(6)),
                 child: Text('hrs', style: GoogleFonts.poppins(
-                    fontSize: 18, color: Colors.white.withOpacity(0.8))),
+                    fontSize: R.font(18), color: Colors.white.withOpacity(0.8))),
               ),
             ],
           ),
           Text(_getSleepStatus(), style: GoogleFonts.poppins(
-              fontSize: 13, color: Colors.white, fontWeight: FontWeight.w500)),
+              fontSize: R.font(13), color: Colors.white, fontWeight: FontWeight.w500)),
           Text('Recommended: ${_getRecommendedHours()} hrs for age $_age',
-              style: GoogleFonts.poppins(fontSize: 11,
+              style: GoogleFonts.poppins(fontSize: R.font(11),
                   color: Colors.white.withOpacity(0.6))),
         ],
       ),
@@ -345,29 +341,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildSleepLogCard() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      padding: const EdgeInsets.all(18),
+    return Container(
+      padding: EdgeInsets.all(R.sp(18)),
       decoration: BoxDecoration(
-        color: AppTheme.cardColor, borderRadius: BorderRadius.circular(24),
+        color: AppTheme.cardColor,
+        borderRadius: BorderRadius.circular(R.sp(24)),
         border: Border.all(color: AppTheme.primaryColor.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Log Your Sleep', style: GoogleFonts.poppins(
-              fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-          const SizedBox(height: 14),
+              fontSize: R.font(16), fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary)),
+          SizedBox(height: R.sp(14)),
           Row(
             children: [
-              // FIX 1,2,3: Fixed height box, time never wraps
               Expanded(child: _buildTimeButton(
                 label: 'Bed Time', hour: _formatHour(_bedTime),
                 period: _formatPeriod(_bedTime),
                 icon: Icons.bedtime_outlined, color: AppTheme.primaryColor,
                 onTap: _pickBedTime,
               )),
-              const SizedBox(width: 12),
+              SizedBox(width: R.sp(12)),
               Expanded(child: _buildTimeButton(
                 label: 'Wake Time', hour: _formatHour(_wakeTime),
                 period: _formatPeriod(_wakeTime),
@@ -381,53 +377,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  // FIX 1,2,3: Precise fixed container - no flex, no column overflow
-  Widget _buildTimeButton({
-    required String label, required String hour, required String period,
-    required IconData icon, required Color color, required VoidCallback onTap,
-  }) {
+  Widget _buildTimeButton({required String label, required String hour,
+      required String period, required IconData icon,
+      required Color color, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 100,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: EdgeInsets.all(R.sp(14)),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(R.sp(16)),
           border: Border.all(color: color.withOpacity(0.3)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Label row
             Row(
               children: [
-                Icon(icon, color: color, size: 16),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(label, overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                          fontSize: 10, color: AppTheme.textSecondary)),
-                ),
+                Icon(icon, color: color, size: R.icon(14)),
+                SizedBox(width: R.sp(4)),
+                Expanded(child: Text(label, overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(fontSize: R.font(10),
+                        color: AppTheme.textSecondary))),
               ],
             ),
-            // Time display - hour on one line, period on next
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(hour,
-                    style: GoogleFonts.poppins(
-                        fontSize: 22, fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary, height: 1.0)),
-                if (period.isNotEmpty)
-                  Text(period,
-                      style: GoogleFonts.poppins(
-                          fontSize: 11, color: color,
-                          fontWeight: FontWeight.w600, height: 1.0)),
-              ],
-            ),
+            SizedBox(height: R.sp(8)),
+            Text(hour, style: GoogleFonts.poppins(
+                fontSize: R.font(20), fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary, height: 1.0)),
+            if (period.isNotEmpty)
+              Text(period, style: GoogleFonts.poppins(
+                  fontSize: R.font(10), color: color,
+                  fontWeight: FontWeight.w600, height: 1.0)),
           ],
         ),
       ),
@@ -437,37 +419,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildQuickStats() {
     return Row(
       children: [
-        Expanded(child: _buildStatCard(label: 'Age Group',
-            value: _age <= 17 ? 'Teen' : _age <= 64 ? 'Adult' : 'Senior',
-            icon: Icons.person_outline, color: AppTheme.primaryColor)),
-        const SizedBox(width: 10),
-        Expanded(child: _buildStatCard(label: 'Gender', value: _gender,
-            icon: Icons.wc_outlined, color: AppTheme.accentColor)),
-        const SizedBox(width: 10),
-        Expanded(child: _buildStatCard(label: 'Target',
-            value: '${_getRecommendedHours()}h',
-            icon: Icons.flag_outlined, color: const Color(0xFF4CAF50))),
+        Expanded(child: _buildStatCard(
+          label: 'Age Group',
+          value: _age <= 17 ? 'Teen' : _age <= 64 ? 'Adult' : 'Senior',
+          icon: Icons.person_outline, color: AppTheme.primaryColor)),
+        SizedBox(width: R.sp(10)),
+        Expanded(child: _buildStatCard(
+          label: 'Gender', value: _gender,
+          icon: Icons.wc_outlined, color: AppTheme.accentColor)),
+        SizedBox(width: R.sp(10)),
+        Expanded(child: _buildStatCard(
+          label: 'Target', value: '${_getRecommendedHours()}h',
+          icon: Icons.flag_outlined, color: const Color(0xFF4CAF50))),
       ],
     );
   }
 
   Widget _buildStatCard({required String label, required String value,
       required IconData icon, required Color color}) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: R.sp(14), horizontal: R.sp(6)),
       decoration: BoxDecoration(
-        color: AppTheme.cardColor, borderRadius: BorderRadius.circular(16),
+        color: AppTheme.cardColor,
+        borderRadius: BorderRadius.circular(R.sp(16)),
         border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 6),
-          Text(value, style: GoogleFonts.poppins(fontSize: 13,
+          Icon(icon, color: color, size: R.icon(20)),
+          SizedBox(height: R.sp(6)),
+          Text(value, style: GoogleFonts.poppins(fontSize: R.font(13),
               fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
           Text(label, textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(fontSize: 9, color: AppTheme.textSecondary)),
+              style: GoogleFonts.poppins(fontSize: R.font(9),
+                  color: AppTheme.textSecondary)),
         ],
       ),
     );
@@ -476,18 +461,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildSaveButton() {
     return GestureDetector(
       onTap: _saveSleepLog,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        width: double.infinity, height: 54,
+      child: Container(
+        width: double.infinity,
+        height: R.sp(54),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(R.sp(20)),
           gradient: LinearGradient(colors: AppTheme.gradientColors,
               begin: Alignment.centerLeft, end: Alignment.centerRight),
           boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.4),
               blurRadius: 20, offset: const Offset(0, 10))],
         ),
         child: Center(child: Text('Save Sleep Log 🌙',
-            style: GoogleFonts.poppins(fontSize: 16,
+            style: GoogleFonts.poppins(fontSize: R.font(16),
                 fontWeight: FontWeight.bold, color: Colors.white))),
       ),
     );
@@ -501,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (_) => const CalendarScreen()))
                 .then((_) => setState(() {})))),
-        const SizedBox(width: 12),
+        SizedBox(width: R.sp(12)),
         Expanded(child: _buildNavCard(label: 'Weekly Report',
             icon: Icons.bar_chart_outlined, color: AppTheme.accentColor,
             onTap: () => Navigator.push(context,
@@ -514,20 +499,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       required Color color, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            vertical: R.sp(16), horizontal: R.sp(12)),
         decoration: BoxDecoration(
-          color: AppTheme.cardColor, borderRadius: BorderRadius.circular(20),
+          color: AppTheme.cardColor,
+          borderRadius: BorderRadius.circular(R.sp(20)),
           border: Border.all(color: color.withOpacity(0.3)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: 22),
-            const SizedBox(width: 8),
+            Icon(icon, color: color, size: R.icon(22)),
+            SizedBox(width: R.sp(8)),
             Flexible(child: Text(label, overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(fontSize: 13,
+                style: GoogleFonts.poppins(fontSize: R.font(13),
                     fontWeight: FontWeight.bold, color: AppTheme.textPrimary))),
           ],
         ),
@@ -537,40 +523,41 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildAboutButton() {
     return GestureDetector(
-      onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (_) => const AboutScreen())),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (_) => const AboutScreen())),
+      child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(R.sp(16)),
         decoration: BoxDecoration(
-          color: AppTheme.cardColor, borderRadius: BorderRadius.circular(20),
+          color: AppTheme.cardColor,
+          borderRadius: BorderRadius.circular(R.sp(20)),
           border: Border.all(color: AppTheme.primaryColor.withOpacity(0.2)),
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(R.sp(8)),
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: AppTheme.gradientColors),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(R.sp(12)),
               ),
-              child: const Icon(Icons.person_rounded, color: Colors.white, size: 20),
+              child: Icon(Icons.person_rounded, color: Colors.white, size: R.icon(20)),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: R.sp(14)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('About SleepWell', style: GoogleFonts.poppins(
-                      fontSize: 14, fontWeight: FontWeight.bold,
+                      fontSize: R.font(14), fontWeight: FontWeight.bold,
                       color: AppTheme.textPrimary)),
                   Text('Meet the developer', style: GoogleFonts.poppins(
-                      fontSize: 11, color: AppTheme.textSecondary)),
+                      fontSize: R.font(11), color: AppTheme.textSecondary)),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: AppTheme.textSecondary, size: 14),
+            Icon(Icons.arrow_forward_ios, color: AppTheme.textSecondary,
+                size: R.icon(14)),
           ],
         ),
       ),

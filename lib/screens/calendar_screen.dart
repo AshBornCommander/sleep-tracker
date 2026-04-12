@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_theme.dart';
+import '../utils/responsive.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -15,10 +16,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Map<String, double> _sleepData = {};
 
   @override
-  void initState() {
-    super.initState();
-    _loadSleepData();
-  }
+  void initState() { super.initState(); _loadSleepData(); }
 
   Future<void> _loadSleepData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -65,7 +63,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _showSleepLogDialog(dateStr, day);
   }
 
-  // FIX 4: Dialog time boxes with exact fixed heights
   void _showSleepLogDialog(String dateStr, int day) {
     TimeOfDay bedTime = const TimeOfDay(hour: 22, minute: 0);
     TimeOfDay wakeTime = const TimeOfDay(hour: 6, minute: 0);
@@ -79,9 +76,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             final m = t.minute.toString().padLeft(2, '0');
             return '$h:$m';
           }
-          String formatP(TimeOfDay t) =>
-              t.period == DayPeriod.am ? 'AM' : 'PM';
-
+          String formatP(TimeOfDay t) => t.period == DayPeriod.am ? 'AM' : 'PM';
           int bedMin = bedTime.hour * 60 + bedTime.minute;
           int wakeMin = wakeTime.hour * 60 + wakeTime.minute;
           if (wakeMin <= bedMin) wakeMin += 1440;
@@ -90,27 +85,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
           return Dialog(
             backgroundColor: Colors.transparent,
             child: Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(R.sp(20)),
               decoration: BoxDecoration(
                 color: AppTheme.cardColor,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(R.sp(24)),
                 border: Border.all(color: AppTheme.primaryColor.withOpacity(0.3)),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: R.sp(14), vertical: R.sp(8)),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(colors: AppTheme.gradientColors),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(R.sp(12)),
                     ),
                     child: Text('${_getMonthName(_focusedMonth.month)} $day',
-                        style: GoogleFonts.poppins(fontSize: 14,
+                        style: GoogleFonts.poppins(fontSize: R.font(14),
                             fontWeight: FontWeight.bold, color: Colors.white)),
                   ),
-                  const SizedBox(height: 16),
-                  // FIX 4: Both boxes same fixed height 80, no overflow
+                  SizedBox(height: R.sp(16)),
                   Row(
                     children: [
                       Expanded(
@@ -132,33 +127,36 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             if (t != null) setDialogState(() => bedTime = t);
                           },
                           child: Container(
-                            height: 90,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: R.sp(12), vertical: R.sp(10)),
                             decoration: BoxDecoration(
                               color: AppTheme.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(R.sp(14)),
                               border: Border.all(
                                   color: AppTheme.primaryColor.withOpacity(0.3)),
                             ),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('🌙 Bed', style: GoogleFonts.poppins(fontSize: 10, color: AppTheme.textSecondary)),
-                                const SizedBox(height: 4),
+                                Text('🌙 Bed', style: GoogleFonts.poppins(
+                                    fontSize: R.font(10),
+                                    color: AppTheme.textSecondary)),
+                                SizedBox(height: R.sp(4)),
                                 Text(formatH(bedTime), style: GoogleFonts.poppins(
-                                    fontSize: 20, fontWeight: FontWeight.bold,
+                                    fontSize: R.font(20),
+                                    fontWeight: FontWeight.bold,
                                     color: AppTheme.textPrimary, height: 1.0)),
                                 Text(formatP(bedTime), style: GoogleFonts.poppins(
-                                    fontSize: 10, color: AppTheme.primaryColor,
+                                    fontSize: R.font(10),
+                                    color: AppTheme.primaryColor,
                                     fontWeight: FontWeight.w600, height: 1.0)),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: R.sp(10)),
                       Expanded(
                         child: GestureDetector(
                           onTap: () async {
@@ -178,26 +176,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             if (t != null) setDialogState(() => wakeTime = t);
                           },
                           child: Container(
-                            height: 90,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: R.sp(12), vertical: R.sp(10)),
                             decoration: BoxDecoration(
                               color: AppTheme.accentColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(R.sp(14)),
                               border: Border.all(
                                   color: AppTheme.accentColor.withOpacity(0.3)),
                             ),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('☀️ Wake', style: GoogleFonts.poppins(fontSize: 10, color: AppTheme.textSecondary)),
-                                const SizedBox(height: 4),
+                                Text('☀️ Wake', style: GoogleFonts.poppins(
+                                    fontSize: R.font(10),
+                                    color: AppTheme.textSecondary)),
+                                SizedBox(height: R.sp(4)),
                                 Text(formatH(wakeTime), style: GoogleFonts.poppins(
-                                    fontSize: 20, fontWeight: FontWeight.bold,
+                                    fontSize: R.font(20),
+                                    fontWeight: FontWeight.bold,
                                     color: AppTheme.textPrimary, height: 1.0)),
                                 Text(formatP(wakeTime), style: GoogleFonts.poppins(
-                                    fontSize: 10, color: AppTheme.accentColor,
+                                    fontSize: R.font(10),
+                                    color: AppTheme.accentColor,
                                     fontWeight: FontWeight.w600, height: 1.0)),
                               ],
                             ),
@@ -206,40 +207,41 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: R.sp(12)),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: R.sp(12)),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(colors: AppTheme.gradientColors),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(R.sp(12)),
                     ),
                     child: Center(child: Text('${hours.toStringAsFixed(1)} hrs slept',
-                        style: GoogleFonts.poppins(fontSize: 18,
+                        style: GoogleFonts.poppins(fontSize: R.font(18),
                             fontWeight: FontWeight.bold, color: Colors.white))),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: R.sp(12)),
                   Row(
                     children: [
                       Expanded(
                         child: GestureDetector(
                           onTap: () => Navigator.pop(context),
                           child: Container(
-                            height: 44,
+                            height: R.sp(44),
                             decoration: BoxDecoration(
                               color: AppTheme.background,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(R.sp(12)),
                               border: Border.all(
                                   color: AppTheme.primaryColor.withOpacity(0.3)),
                             ),
                             child: Center(child: Text('Cancel',
                                 style: GoogleFonts.poppins(
                                     color: AppTheme.textSecondary,
-                                    fontWeight: FontWeight.w600))),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: R.font(13)))),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: R.sp(10)),
                       Expanded(
                         child: GestureDetector(
                           onTap: () async {
@@ -259,14 +261,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             }
                           },
                           child: Container(
-                            height: 44,
+                            height: R.sp(44),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(colors: AppTheme.gradientColors),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(R.sp(12)),
                             ),
                             child: Center(child: Text('Save',
-                                style: GoogleFonts.poppins(
-                                    color: Colors.white, fontWeight: FontWeight.bold))),
+                                style: GoogleFonts.poppins(color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: R.font(13)))),
                           ),
                         ),
                       ),
@@ -283,6 +286,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    R.init(context);
     final firstDay = DateTime(_focusedMonth.year, _focusedMonth.month, 1);
     final daysInMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1, 0).day;
     final startingWeekday = firstDay.weekday % 7;
@@ -299,21 +303,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text('Sleep Calendar', style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+              fontWeight: FontWeight.bold, color: AppTheme.textPrimary,
+              fontSize: R.font(18))),
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+          padding: EdgeInsets.fromLTRB(R.sp(16), 0, R.sp(16), R.sp(20)),
           child: Column(
             children: [
               _buildMonthSelector(),
-              const SizedBox(height: 4),
+              SizedBox(height: R.sp(4)),
               Text('Tap any date to log sleep', style: GoogleFonts.poppins(
-                  fontSize: 12, color: AppTheme.textSecondary)),
-              const SizedBox(height: 12),
+                  fontSize: R.font(12), color: AppTheme.textSecondary)),
+              SizedBox(height: R.sp(12)),
               _buildWeekdayHeaders(),
-              const SizedBox(height: 6),
+              SizedBox(height: R.sp(6)),
               _buildCalendarGrid(startingWeekday, daysInMonth),
-              const SizedBox(height: 20),
+              SizedBox(height: R.sp(20)),
               _buildLegend(),
             ],
           ),
@@ -333,7 +338,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           }),
         ),
         Text('${_getMonthName(_focusedMonth.month)} ${_focusedMonth.year}',
-            style: GoogleFonts.poppins(fontSize: 18,
+            style: GoogleFonts.poppins(fontSize: R.font(18),
                 fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
         IconButton(
           icon: Icon(Icons.chevron_right, color: AppTheme.textPrimary),
@@ -350,7 +355,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Row(
       children: days.map((d) => Expanded(
         child: Center(child: Text(d, style: GoogleFonts.poppins(
-            fontSize: 11, color: AppTheme.textSecondary, fontWeight: FontWeight.w600))),
+            fontSize: R.font(11), color: AppTheme.textSecondary,
+            fontWeight: FontWeight.w600))),
       )).toList(),
     );
   }
@@ -395,11 +401,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('$day', style: GoogleFonts.poppins(
-                      fontSize: 11, fontWeight: FontWeight.bold,
+                      fontSize: R.font(11), fontWeight: FontWeight.bold,
                       color: AppTheme.textPrimary)),
                   if (hours > 0)
                     Text('${hours.toStringAsFixed(1)}h', style: GoogleFonts.poppins(
-                        fontSize: 8, color: AppTheme.textPrimary.withOpacity(0.8))),
+                        fontSize: R.font(8),
+                        color: AppTheme.textPrimary.withOpacity(0.8))),
                 ],
               ),
             ),
@@ -411,15 +418,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildLegend() {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(R.sp(14)),
       decoration: BoxDecoration(color: AppTheme.cardColor,
-          borderRadius: BorderRadius.circular(16)),
+          borderRadius: BorderRadius.circular(R.sp(16))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Sleep Quality', style: GoogleFonts.poppins(
-              fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-          const SizedBox(height: 10),
+              fontSize: R.font(12), fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary)),
+          SizedBox(height: R.sp(10)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -437,14 +445,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _legendItem(Color color, String hours, String label) {
     return Column(
       children: [
-        Container(width: 26, height: 26,
+        Container(width: R.sp(26), height: R.sp(26),
             decoration: BoxDecoration(color: color,
                 borderRadius: BorderRadius.circular(6))),
-        const SizedBox(height: 4),
-        Text(hours, style: GoogleFonts.poppins(fontSize: 10,
+        SizedBox(height: R.sp(4)),
+        Text(hours, style: GoogleFonts.poppins(fontSize: R.font(10),
             color: AppTheme.textPrimary, fontWeight: FontWeight.bold)),
         Text(label, style: GoogleFonts.poppins(
-            fontSize: 9, color: AppTheme.textSecondary)),
+            fontSize: R.font(9), color: AppTheme.textSecondary)),
       ],
     );
   }

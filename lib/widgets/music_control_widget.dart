@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/audio_service.dart';
 import '../theme/app_theme.dart';
+import '../utils/responsive.dart';
 
 class MusicControlWidget extends StatefulWidget {
   const MusicControlWidget({super.key});
@@ -22,19 +23,14 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
     super.initState();
     _sliderVolume = _audio.volume;
     _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1800),
-    )..repeat(reverse: true);
+      vsync: this, duration: const Duration(milliseconds: 1800))
+      ..repeat(reverse: true);
     _pulseAnim = Tween<double>(begin: 0.93, end: 1.07).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
-    );
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
   }
 
   @override
-  void dispose() {
-    _pulseController.dispose();
-    super.dispose();
-  }
+  void dispose() { _pulseController.dispose(); super.dispose(); }
 
   void _showTrackPicker() {
     showModalBottomSheet(
@@ -42,29 +38,28 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (_) => Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+        margin: EdgeInsets.all(R.sp(16)),
+        padding: EdgeInsets.fromLTRB(R.sp(20), R.sp(16), R.sp(20), R.sp(32)),
         decoration: BoxDecoration(
           color: AppTheme.cardColor,
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(R.sp(28)),
           border: Border.all(color: AppTheme.primaryColor.withOpacity(0.3)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 36, height: 4,
-              margin: const EdgeInsets.only(bottom: 16),
+              width: R.sp(36), height: R.sp(4),
+              margin: EdgeInsets.only(bottom: R.sp(16)),
               decoration: BoxDecoration(
                 color: AppTheme.textSecondary.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            Text('Choose Ambient Music',
-                style: GoogleFonts.poppins(
-                    fontSize: 17, fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary)),
-            const SizedBox(height: 16),
+            Text('Choose Ambient Music', style: GoogleFonts.poppins(
+                fontSize: R.font(17), fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary)),
+            SizedBox(height: R.sp(16)),
             ...AudioService.tracks.map((track) {
               final isSelected = _audio.currentTrackId == track.id;
               return GestureDetector(
@@ -73,18 +68,15 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                   Navigator.pop(context);
                   setState(() {});
                 },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
+                child: Container(
+                  margin: EdgeInsets.only(bottom: R.sp(10)),
+                  padding: EdgeInsets.all(R.sp(14)),
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppTheme.primaryColor.withOpacity(0.15)
+                    color: isSelected ? AppTheme.primaryColor.withOpacity(0.15)
                         : AppTheme.background,
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(R.sp(14)),
                     border: Border.all(
-                      color: isSelected
-                          ? AppTheme.primaryColor
+                      color: isSelected ? AppTheme.primaryColor
                           : AppTheme.primaryColor.withOpacity(0.1),
                       width: isSelected ? 2 : 1,
                     ),
@@ -92,33 +84,29 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                   child: Row(
                     children: [
                       Container(
-                        width: 46, height: 46,
+                        width: R.sp(46), height: R.sp(46),
                         decoration: BoxDecoration(
                           gradient: isSelected
                               ? LinearGradient(colors: AppTheme.gradientColors)
                               : LinearGradient(colors: [
                                   AppTheme.textSecondary.withOpacity(0.3),
-                                  AppTheme.textSecondary.withOpacity(0.3),
-                                ]),
-                          borderRadius: BorderRadius.circular(12),
+                                  AppTheme.textSecondary.withOpacity(0.3)]),
+                          borderRadius: BorderRadius.circular(R.sp(12)),
                         ),
-                        child: Center(
-                          child: Text(track.emoji,
-                              style: const TextStyle(fontSize: 22)),
-                        ),
+                        child: Center(child: Text(track.emoji,
+                            style: TextStyle(fontSize: R.font(22)))),
                       ),
-                      const SizedBox(width: 14),
+                      SizedBox(width: R.sp(14)),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(track.name,
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14, fontWeight: FontWeight.bold,
-                                    color: AppTheme.textPrimary)),
-                            Text(track.description,
-                                style: GoogleFonts.poppins(
-                                    fontSize: 11, color: AppTheme.textSecondary)),
+                            Text(track.name, style: GoogleFonts.poppins(
+                                fontSize: R.font(14), fontWeight: FontWeight.bold,
+                                color: AppTheme.textPrimary)),
+                            Text(track.description, style: GoogleFonts.poppins(
+                                fontSize: R.font(11),
+                                color: AppTheme.textSecondary)),
                           ],
                         ),
                       ),
@@ -129,7 +117,8 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                             gradient: LinearGradient(colors: AppTheme.gradientColors),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.check, color: Colors.white, size: 14),
+                          child: Icon(Icons.check, color: Colors.white,
+                              size: R.icon(14)),
                         ),
                     ],
                   ),
@@ -144,23 +133,22 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
 
   @override
   Widget build(BuildContext context) {
+    R.init(context);
     final track = _audio.currentTrack;
     final isMuted = _audio.isMuted;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(R.sp(16)),
       decoration: BoxDecoration(
         color: AppTheme.cardColor,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(R.sp(24)),
         border: Border.all(
-          color: !isMuted
-              ? AppTheme.primaryColor.withOpacity(0.3)
+          color: !isMuted ? AppTheme.primaryColor.withOpacity(0.3)
               : AppTheme.primaryColor.withOpacity(0.1),
         ),
       ),
       child: Column(
         children: [
-          // Top row
           Row(
             children: [
               AnimatedBuilder(
@@ -168,61 +156,55 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                 builder: (context, child) => Transform.scale(
                   scale: !isMuted ? _pulseAnim.value : 1.0,
                   child: Container(
-                    width: 44, height: 44,
+                    width: R.sp(44), height: R.sp(44),
                     decoration: BoxDecoration(
                       gradient: !isMuted
                           ? LinearGradient(colors: AppTheme.gradientColors)
                           : LinearGradient(colors: [
                               AppTheme.textSecondary.withOpacity(0.4),
-                              AppTheme.textSecondary.withOpacity(0.4),
-                            ]),
-                      borderRadius: BorderRadius.circular(12),
+                              AppTheme.textSecondary.withOpacity(0.4)]),
+                      borderRadius: BorderRadius.circular(R.sp(12)),
                     ),
-                    child: Center(
-                      child: Text(isMuted ? '🔇' : track.emoji,
-                          style: const TextStyle(fontSize: 20)),
-                    ),
+                    child: Center(child: Text(isMuted ? '🔇' : track.emoji,
+                        style: TextStyle(fontSize: R.font(20)))),
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
-              // FIX: Title column with Expanded, no Row inside
+              SizedBox(width: R.sp(10)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(track.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                            fontSize: 13, fontWeight: FontWeight.bold,
+                    Text(track.name, overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(fontSize: R.font(13),
+                            fontWeight: FontWeight.bold,
                             color: AppTheme.textPrimary)),
                     Text(isMuted ? 'Tap Unmute' : 'Playing softly...',
-                        style: GoogleFonts.poppins(
-                            fontSize: 10, color: AppTheme.textSecondary)),
+                        style: GoogleFonts.poppins(fontSize: R.font(10),
+                            color: AppTheme.textSecondary)),
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
-              // Change button - no Row inside, just icon + text
+              SizedBox(width: R.sp(8)),
               GestureDetector(
                 onTap: _showTrackPicker,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: R.sp(8), vertical: R.sp(6)),
                   decoration: BoxDecoration(
                     color: AppTheme.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppTheme.primaryColor.withOpacity(0.3)),
+                    borderRadius: BorderRadius.circular(R.sp(10)),
+                    border: Border.all(
+                        color: AppTheme.primaryColor.withOpacity(0.3)),
                   ),
-                  child: Text('Change',
-                      style: GoogleFonts.poppins(
-                          fontSize: 10, fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryColor)),
+                  child: Text('Change', style: GoogleFonts.poppins(
+                      fontSize: R.font(10), fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryColor)),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          // Volume row
+          SizedBox(height: R.sp(12)),
           Row(
             children: [
               GestureDetector(
@@ -232,9 +214,9 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                 },
                 child: Icon(Icons.volume_mute_rounded,
                     color: isMuted ? AppTheme.primaryColor : AppTheme.textSecondary,
-                    size: 20),
+                    size: R.icon(20)),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: R.sp(4)),
               Expanded(
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
@@ -257,7 +239,7 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                   ),
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: R.sp(4)),
               GestureDetector(
                 onTap: () async {
                   setState(() => _sliderVolume = 1.0);
@@ -268,9 +250,9 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                 child: Icon(Icons.volume_up_rounded,
                     color: (!isMuted && _sliderVolume > 0.6)
                         ? AppTheme.primaryColor : AppTheme.textSecondary,
-                    size: 20),
+                    size: R.icon(20)),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: R.sp(8)),
               GestureDetector(
                 onTap: () async {
                   await _audio.setMuted(!isMuted);
@@ -278,12 +260,13 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                   setState(() {});
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: R.sp(10), vertical: R.sp(6)),
                   decoration: BoxDecoration(
                     color: isMuted
                         ? AppTheme.primaryColor.withOpacity(0.15)
                         : const Color(0xFFFF6B6B).withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(R.sp(10)),
                     border: Border.all(
                       color: isMuted
                           ? AppTheme.primaryColor.withOpacity(0.3)
@@ -292,9 +275,9 @@ class _MusicControlWidgetState extends State<MusicControlWidget>
                   ),
                   child: Text(isMuted ? 'Unmute' : 'Mute',
                       style: GoogleFonts.poppins(
-                        fontSize: 11, fontWeight: FontWeight.bold,
-                        color: isMuted ? AppTheme.primaryColor : const Color(0xFFFF6B6B),
-                      )),
+                          fontSize: R.font(11), fontWeight: FontWeight.bold,
+                          color: isMuted ? AppTheme.primaryColor
+                              : const Color(0xFFFF6B6B))),
                 ),
               ),
             ],
