@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/splash_screen.dart';
 import 'services/audio_service.dart';
+import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,12 +15,11 @@ void main() async {
     ),
   );
 
-  // Safe init - won't crash on web
-  try {
-    await AudioService().init();
-  } catch (e) {
-    // Continue even if audio fails
-  }
+  // Init audio
+  try { await AudioService().init(); } catch (e) {}
+
+  // Init notifications
+  try { await NotificationService().init(); } catch (e) {}
 
   final prefs = await SharedPreferences.getInstance();
   final bool isOnboarded = prefs.getBool('isOnboarded') ?? false;
@@ -45,9 +45,7 @@ class SleepWellApp extends StatelessWidget {
           secondary: Color(0xFF00D2FF),
           surface: Color(0xFF1D1E33),
         ),
-        textTheme: GoogleFonts.poppinsTextTheme(
-          ThemeData.dark().textTheme,
-        ),
+        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
         useMaterial3: true,
       ),
       home: SplashScreen(isOnboarded: isOnboarded),
