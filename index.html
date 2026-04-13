@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepWell — Sleep Better. Live Better.</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0A0E21;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #6C63FF, #00D2FF);
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.9; }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h2 {
+            font-size: 1.3em;
+            color: #8A8BB0;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: #1D1E33;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(108,99,255,0.2);
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .card:hover {
+            border-color: #6C63FF;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(108,99,255,0.3);
+        }
+        .card-icon {
+            font-size: 2.5em;
+            margin-bottom: 14px;
+        }
+        .card h3 {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+        .card p {
+            font-size: 0.85em;
+            color: #8A8BB0;
+            line-height: 1.5;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(108,99,255,0.2);
+            color: #6C63FF;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            margin-top: 10px;
+        }
+        .badge.green {
+            background: rgba(76,175,80,0.2);
+            color: #4CAF50;
+        }
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8A8BB0;
+            font-size: 0.85em;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .footer a {
+            color: #6C63FF;
+            text-decoration: none;
+        }
+        .play-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #6C63FF, #00D2FF);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+            margin: 20px auto;
+            transition: opacity 0.3s;
+        }
+        .play-btn:hover { opacity: 0.9; }
+        .center { text-align: center; margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div style="font-size:3em; margin-bottom:10px;">🌙</div>
+    <h1>SleepWell</h1>
+    <p>Sleep Better. Live Better.</p>
+</div>
+
+<div class="container">
+
+    <div class="center">
+        <p style="color:#8A8BB0; margin-bottom:20px;">
+            A Flutter Android app for tracking sleep health and getting personalized insights
+        </p>
+        <a href="https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell" 
+           class="play-btn">
+            ▶ Get it on Google Play
+        </a>
+    </div>
+
+    <h2>📄 Documentation</h2>
+    <div class="cards">
+
+        <a href="privacy-policy.html" class="card">
+            <div class="card-icon">🔒</div>
+            <h3>Privacy Policy</h3>
+            <p>How SleepWell handles your data. All data stored locally on your device.</p>
+            <span class="badge green">Live</span>
+        </a>
+
+        <a href="DEVLOG.md" class="card">
+            <div class="card-icon">📋</div>
+            <h3>Dev Log</h3>
+            <p>Complete development history, tech stack, bugs fixed, and lessons learned.</p>
+            <span class="badge">Markdown</span>
+        </a>
+
+        <a href="MUSIC_SETUP.md" class="card">
+            <div class="card-icon">🎵</div>
+            <h3>Music Setup</h3>
+            <p>How the ambient sleep music was generated and integrated into the app.</p>
+            <span class="badge">Markdown</span>
+        </a>
+
+        <a href="FlutterForge_Agent_Prompt.md" class="card">
+            <div class="card-icon">🤖</div>
+            <h3>FlutterForge Agent</h3>
+            <p>Master prompt for building any Flutter app from scratch to Play Store.</p>
+            <span class="badge">AI Prompt</span>
+        </a>
+
+    </div>
+
+    <h2>✨ App Features</h2>
+    <div class="cards">
+        <div class="card">
+            <div class="card-icon">😴</div>
+            <h3>Sleep Tracking</h3>
+            <p>Log bed time and wake time daily. Get personalized recommendations by age.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">📊</div>
+            <h3>Weekly Reports</h3>
+            <p>Bar charts, sleep risk analysis, and personalized tips every week.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">📅</div>
+            <h3>Sleep Calendar</h3>
+            <p>Monthly view with color-coded sleep quality for every day.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">🎵</div>
+            <h3>Ambient Music</h3>
+            <p>Deep Sleep, Rain Sounds, and Ocean Waves to help you fall asleep.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">🌙</div>
+            <h3>3 Themes</h3>
+            <p>Morning, Midday, and Night themes. Auto-switches based on time of day.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">🔔</div>
+            <h3>Reminders</h3>
+            <p>Daily 8AM sleep log reminder and Monday weekly report notification.</p>
+        </div>
+    </div>
+
+    <h2>👨‍💻 Developer</h2>
+    <div class="cards">
+        <div class="card">
+            <div class="card-icon">👤</div>
+            <h3>Pavan Kumar Malladi</h3>
+            <p>Data Engineer & App Developer<br>Phoenix, Arizona</p>
+            <span class="badge">Creator</span>
+        </div>
+        <a href="https://github.com/AshBornCommander/sleep-tracker" class="card">
+            <div class="card-icon">💻</div>
+            <h3>Source Code</h3>
+            <p>View the complete Flutter source code on GitHub.</p>
+            <span class="badge">GitHub</span>
+        </a>
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>© 2026 SleepWell by <a href="https://github.com/AshBornCommander">Pavan Kumar Malladi</a></p>
+    <p style="margin-top:8px;">Built with ❤️ using Flutter</p>
+</div>
+
+</body>
+</html>
