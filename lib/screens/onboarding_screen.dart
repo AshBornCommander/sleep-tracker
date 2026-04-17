@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen.dart';
+import '../theme/app_theme.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -30,9 +31,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeIn),
-    );
+    _fadeAnim = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeIn));
     _animController.forward();
   }
 
@@ -78,6 +80,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   @override
   Widget build(BuildContext context) {
+    AppTheme.applyStatusBar();
     return Scaffold(
       backgroundColor: const Color(0xFF0A0E21),
       body: FadeTransition(
@@ -143,8 +146,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               color: const Color(0xFF6C63FF).withOpacity(0.15),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.person_outline,
-                color: Color(0xFF6C63FF), size: 32),
+            child: const Icon(
+              Icons.person_outline,
+              color: Color(0xFF6C63FF),
+              size: 32,
+            ),
           ),
           const SizedBox(height: 24),
           Text(
@@ -187,8 +193,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               color: const Color(0xFF00D2FF).withOpacity(0.15),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.cake_outlined,
-                color: Color(0xFF00D2FF), size: 32),
+            child: const Icon(
+              Icons.cake_outlined,
+              color: Color(0xFF00D2FF),
+              size: 32,
+            ),
           ),
           const SizedBox(height: 24),
           Text(
@@ -234,8 +243,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     inactiveTrackColor: const Color(0xFF1D1E33),
                     thumbColor: const Color(0xFF6C63FF),
                     overlayColor: const Color(0xFF6C63FF).withOpacity(0.2),
-                    thumbShape:
-                        const RoundSliderThumbShape(enabledThumbRadius: 14),
+                    thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 14,
+                    ),
                     trackHeight: 6,
                   ),
                   child: Slider(
@@ -266,8 +276,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               color: const Color(0xFF6C63FF).withOpacity(0.15),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.wc_outlined,
-                color: Color(0xFF6C63FF), size: 32),
+            child: const Icon(
+              Icons.wc_outlined,
+              color: Color(0xFF6C63FF),
+              size: 32,
+            ),
           ),
           const SizedBox(height: 24),
           Text(

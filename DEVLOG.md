@@ -382,3 +382,111 @@ Flutter Docs:     https://docs.flutter.dev
 
 *This app was built from scratch with zero prior mobile development experience.*  
 *From idea to Google Play Store in one session. 🚀*
+
+---
+
+## 🍎 iOS Development (Added April 2026)
+
+### Environment Setup
+```
+Mac:          MacBook (friend's) — macOS Sequoia 15.7.5
+Xcode:        16.3 (downloaded from developer.apple.com)
+CocoaPods:    1.16.2
+Flutter:      3.41.7 (installed via Homebrew)
+Test Device:  Pavan Kumar's iPhone (iOS 26.4.1)
+```
+
+### iOS-Specific Setup Steps:
+```bash
+brew install --cask flutter
+brew install cocoapods
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -runFirstLaunch
+cd ios && pod install && cd ..
+flutter run -d <iphone_device_id>
+```
+
+### iOS Configuration Changes:
+```
+Bundle ID:     com.pavankumar.sleepwell
+Display Name:  SleepWell
+Team:          Pavan Kumar Malladi (SPGDYUJ6RB)
+Min iOS:       13.0
+Signing:       Automatic (Xcode managed)
+```
+
+### Info.plist additions:
+```xml
+<key>LSApplicationQueriesSchemes</key>
+<array>
+    <string>mailto</string>
+    <string>https</string>
+    <string>http</string>
+</array>
+```
+
+### App Icons for iOS:
+All sizes generated and placed in:
+```
+ios/Runner/Assets.xcassets/AppIcon.appiconset/
+```
+Sizes: 20, 29, 38, 40, 57, 58, 60, 76, 80, 87, 114, 120, 152, 167, 180, 1024
+
+---
+
+## 🎵 Music Updates (April 2026)
+
+### New Tracks Added:
+```
+ethereal_dreams.mp3  → Default track (90 sec loop)
+  - Dreamy Dmaj9 pad layer
+  - Floating pentatonic melody
+  - Deep bass drone
+  - Shimmer layer
+  - Reverb simulation
+
+smooth_jazz.mp3      → Track 2
+  - Cmaj7/Am7/Fmaj7/G7 progression
+  - Piano-style tones
+  - Soft bass line
+```
+
+### Audio Service Updates:
+- Added `_isSwitching` flag to prevent black screen crash
+- Never dispose player — use stop() only
+- Debug logging added
+- Ethereal Dreams set as default
+
+---
+
+## 🔧 Bug Fixes (iOS Session)
+
+| Issue | Fix |
+|-------|-----|
+| Status bar white on light themes | Added `AppTheme.applyStatusBar()` to all screens |
+| AppBar overrides status bar | Added `systemOverlayStyle` to all AppBars |
+| Share opening email instead of sheet | Added `share_plus` package |
+| Email body showing +++ for spaces | Changed to `Uri.encodeComponent()` |
+| Jazz no sound | File was WAV disguised as MP3 - regenerated properly |
+| CocoaPods build errors | `flutter clean` + `rm -rf Pods Podfile.lock` + `pod install` |
+| Missing imports on screens | Added `services.dart`, `app_theme.dart`, `responsive.dart` |
+
+---
+
+## 📦 New Packages Added
+
+```yaml
+share_plus: ^10.0.0  # Native share sheet iOS + Android
+```
+
+---
+
+## 🏪 App Store Status
+
+```
+Apple Developer Account: pavankumarmalladi7@gmail.com
+Enrollment:  $99/year — April 2026
+Bundle ID:   com.pavankumar.sleepwell
+Status:      In Development — pending submission
+```
+

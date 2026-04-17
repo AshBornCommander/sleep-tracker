@@ -1,10 +1,11 @@
 # 🌙 SleepWell — Sleep Better. Live Better.
 
-A Flutter Android app for tracking daily sleep patterns, getting personalized health insights, and improving sleep quality.
+A Flutter app for **Android & iOS** that helps you track daily sleep patterns, get personalized health insights, and improve your sleep quality.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.41.6-blue?logo=flutter)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.41.7-blue?logo=flutter)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.4-blue?logo=dart)](https://dart.dev)
 [![Android](https://img.shields.io/badge/Android-6.0+-green?logo=android)](https://android.com)
+[![iOS](https://img.shields.io/badge/iOS-13.0+-black?logo=apple)](https://apple.com)
 [![Play Store](https://img.shields.io/badge/Google%20Play-Available-brightgreen?logo=google-play)](https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell)
 [![License](https://img.shields.io/badge/License-MIT-purple)](LICENSE)
 
@@ -29,23 +30,24 @@ A Flutter Android app for tracking daily sleep patterns, getting personalized he
 - Weekly sleep bar chart visualization
 - Sleep risk analysis (chronic deprivation detection)
 - Personalized tips based on your sleep patterns
-- Email your weekly report directly to yourself
+- Email your weekly report with beautiful formatting
 
 ### 📅 Sleep Calendar
 - Monthly view with color-coded sleep quality
 - Tap any past date to log or edit sleep
 - Visual legend (Critical / Low / Good / High)
 
-### 🎵 Ambient Music
-- 3 built-in tracks: Deep Sleep, Rain Sounds, Ocean Waves
-- Smooth fade in/out transitions
-- Volume slider + mute toggle
-- Continuous loop playback
+### 🎵 Ambient Music (4 Tracks)
+- ✨ Ethereal Dreams — default dreamy ambient
+- 🎷 Smooth Jazz — soft piano jazz
+- 🌙 Deep Sleep — 432Hz healing tones
+- 🌊 Ocean Waves — soothing ocean sounds
+- Smooth fade in/out, volume control, mute toggle
 
 ### 🎨 Themes
-- 3 beautiful themes: Morning, Midday, Night
+- 3 themes: Morning (warm), Midday (blue), Night (dark)
 - Auto-detects time of day
-- Manual toggle from home screen
+- Status bar adapts to theme on all screens
 
 ### 🔔 Notifications
 - Daily 8AM sleep log reminder
@@ -53,9 +55,14 @@ A Flutter Android app for tracking daily sleep patterns, getting personalized he
 - Toggle on/off from About screen
 
 ### 👤 User Profile
-- Personalized onboarding (name, age, gender, email)
+- Personalized onboarding
 - Profile photo upload
 - All data stored locally — full privacy
+
+### 📤 Share & Review
+- Native share sheet (iOS + Android)
+- Real Play Store / App Store review dialog
+- Beautiful formatted email weekly report
 
 ---
 
@@ -63,7 +70,7 @@ A Flutter Android app for tracking daily sleep patterns, getting personalized he
 
 | Category | Technology |
 |----------|-----------|
-| Framework | Flutter 3.41.6 |
+| Framework | Flutter 3.41.7 |
 | Language | Dart 3.11.4 |
 | Storage | SharedPreferences (local) |
 | Charts | fl_chart |
@@ -71,7 +78,8 @@ A Flutter Android app for tracking daily sleep patterns, getting personalized he
 | Fonts | Google Fonts (Poppins) |
 | Notifications | flutter_local_notifications |
 | Review | in_app_review |
-| Email | url_launcher |
+| Email/URLs | url_launcher |
+| Share | share_plus |
 
 ---
 
@@ -79,27 +87,27 @@ A Flutter Android app for tracking daily sleep patterns, getting personalized he
 
 ### Prerequisites
 ```bash
-# Install Flutter
-https://docs.flutter.dev/get-started/install
-
-# Verify installation
 flutter doctor
 ```
 
 ### Clone & Run
 ```bash
-# Clone the repo
 git clone https://github.com/AshBornCommander/sleep-tracker.git
 cd sleep-tracker
-
-# Install dependencies
 flutter pub get
 
-# Run on connected device
-flutter run
+# Android
+flutter run -d <android_device>
 
-# Build release APK
+# iOS (requires Mac + Xcode)
+cd ios && pod install && cd ..
+flutter run -d <ios_device>
+
+# Build for Play Store
 flutter build appbundle --release
+
+# Build for App Store
+flutter build ipa --release
 ```
 
 ---
@@ -108,23 +116,30 @@ flutter build appbundle --release
 
 ```
 lib/
-├── main.dart                    # App entry point
+├── main.dart
 ├── theme/
-│   └── app_theme.dart           # Colors, gradients, theme modes
+│   └── app_theme.dart           # Colors, themes, status bar
 ├── utils/
-│   └── responsive.dart          # R class - responsive sizing
+│   └── responsive.dart          # R class - all responsive sizing
 ├── screens/
-│   ├── splash_screen.dart       # Animated splash
-│   ├── onboarding_screen.dart   # User setup flow
-│   ├── home_screen.dart         # Main sleep logging screen
-│   ├── calendar_screen.dart     # Monthly sleep calendar
-│   ├── report_screen.dart       # Weekly reports & analytics
-│   └── about_screen.dart        # Profile & settings
+│   ├── splash_screen.dart
+│   ├── onboarding_screen.dart
+│   ├── home_screen.dart
+│   ├── calendar_screen.dart
+│   ├── report_screen.dart
+│   └── about_screen.dart
 ├── widgets/
-│   └── music_control_widget.dart # Ambient music player
+│   └── music_control_widget.dart
 └── services/
-    ├── audio_service.dart        # Music playback management
-    └── notification_service.dart # Local notifications
+    ├── audio_service.dart
+    └── notification_service.dart
+assets/
+├── audio/
+│   ├── ethereal_dreams.mp3      # Default - dreamy ambient
+│   ├── smooth_jazz.mp3          # Soft piano jazz
+│   ├── deep_sleep.mp3           # 432Hz tones
+│   └── ocean_waves.mp3          # Ocean sounds
+└── developer.jpeg
 ```
 
 ---
@@ -132,11 +147,11 @@ lib/
 ## 🎨 Design System
 
 ```
-Primary:    #6C63FF  (Purple)
-Accent:     #00D2FF  (Cyan)
-Background: #0A0E21  (Midnight Blue)
-Card:       #1D1E33  (Dark Navy)
-Font:       Poppins (Google Fonts)
+Background:  #0A0E21  (midnight blue - night)
+Card:        #1D1E33  (dark navy)
+Primary:     #6C63FF  (purple)
+Accent:      #00D2FF  (cyan)
+Font:        Poppins (Google Fonts)
 ```
 
 ---
@@ -154,13 +169,22 @@ dependencies:
   timezone: ^0.9.0
   in_app_review: ^2.0.0
   url_launcher: ^6.0.0
+  share_plus: ^10.0.0
 ```
+
+---
+
+## 📲 Platform Support
+
+| Platform | Status | Store |
+|----------|--------|-------|
+| Android  | ✅ Live | [Google Play](https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell) |
+| iOS      | 🔄 Coming Soon | App Store |
 
 ---
 
 ## 🔒 Privacy
 
-SleepWell takes privacy seriously:
 - ✅ All data stored **locally on device only**
 - ✅ No data transmitted to external servers
 - ✅ No ads, no tracking, no analytics
@@ -174,36 +198,21 @@ SleepWell takes privacy seriously:
 
 | Document | Description |
 |----------|-------------|
-| [Privacy Policy](https://ashborncommander.github.io/sleep-tracker/privacy-policy.html) | Data handling and user rights |
-| [Dev Log](DEVLOG.md) | Complete development history and lessons learned |
-| [Music Setup](MUSIC_SETUP.md) | How ambient music was generated |
+| [Live Docs](https://ashborncommander.github.io/sleep-tracker/) | Full documentation index |
+| [Privacy Policy](https://ashborncommander.github.io/sleep-tracker/privacy-policy.html) | Data handling |
+| [Dev Log](DEVLOG.md) | Development history and lessons |
 | [FlutterForge Agent](FlutterForge_Agent_Prompt.md) | AI prompt for building Flutter apps |
-
----
-
-## 🏪 Download
-
-<a href="https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell">
-  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="200"/>
-</a>
 
 ---
 
 ## 👨‍💻 Developer
 
-**Pavan Kumar Malladi**  
-Data Engineer & App Developer  
-Phoenix, Arizona
+**Pavan Kumar Malladi**
+Data Engineer & App Developer — Phoenix, Arizona
 
 - GitHub: [@AshBornCommander](https://github.com/AshBornCommander)
 - Email: pavankumarmalladi7@gmail.com
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-*Built with ❤️ using Flutter — From zero mobile experience to Google Play Store!* 🚀
+*Built with ❤️ using Flutter — Android & iOS from a single codebase!* 🚀

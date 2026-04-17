@@ -44,6 +44,7 @@ dependencies:
   timezone: ^0.11.0
   in_app_review: ^2.0.11
   url_launcher: ^6.3.2
+  share_plus: ^13.0.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/developer.jpeg
+    - assets/audio/ethereal_dreams.mp3
+    - assets/audio/smooth_jazz.mp3
     - assets/audio/deep_sleep.mp3
     - assets/audio/rain_sounds.mp3
     - assets/audio/ocean_waves.mp3
