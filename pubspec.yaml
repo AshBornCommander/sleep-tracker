@@ -40,11 +40,11 @@ dependencies:
   animated_text_kit: ^4.3.0
   audioplayers: ^6.6.0
   image_picker: ^1.2.1
-  flutter_local_notifications: ^21.0.0
-  timezone: ^0.11.0
+  timezone: 0.9.4
   in_app_review: ^2.0.11
   url_launcher: ^6.3.2
   share_plus: ^13.0.0
+  flutter_local_notifications: 17.2.4
 
 dev_dependencies:
   flutter_test:

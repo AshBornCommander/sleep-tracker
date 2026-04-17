@@ -8,6 +8,7 @@ import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -15,16 +16,23 @@ void main() async {
     ),
   );
 
-  // Init audio
-  try { await AudioService().init(); } catch (e) {}
-
-  // Init notifications
-  try { await NotificationService().init(); } catch (e) {}
-
+  // FIX 3: Only load prefs on startup - nothing else
+  // Audio and notifications init AFTER UI is shown
   final prefs = await SharedPreferences.getInstance();
   final bool isOnboarded = prefs.getBool('isOnboarded') ?? false;
 
   runApp(SleepWellApp(isOnboarded: isOnboarded));
+
+  // FIX 3: Init heavy services AFTER app is rendered
+  // 2 second delay ensures UI is fully responsive first
+  Future.delayed(const Duration(seconds: 2), () async {
+    try {
+      await AudioService().init();
+    } catch (e) {}
+    try {
+      await NotificationService().init();
+    } catch (e) {}
+  });
 }
 
 class SleepWellApp extends StatelessWidget {

@@ -15,7 +15,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sleep_tracker"
+    namespace = "com.example.sleepwell"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
