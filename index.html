@@ -3,78 +3,62 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SleepWell — Documentation</title>
+    <title>SleepWell — Sleep Better. Live Better.</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f5f7fa; color: #24292e; min-height: 100vh; }
-        header { background: #6C63FF; color: #fff; padding: 2rem 2.5rem; }
-        header h1 { font-size: 1.8rem; font-weight: 700; }
-        header p { margin-top: 0.4rem; font-size: 0.95rem; opacity: 0.88; }
-        .platform-badges { margin-top: 1rem; display: flex; gap: 8px; flex-wrap: wrap; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-        .badge-android { background: rgba(255,255,255,0.25); color: white; }
-        .badge-ios { background: rgba(255,255,255,0.25); color: white; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f7fa; color: #24292e; }
+        header { background: linear-gradient(135deg, #6C63FF, #00D2FF); color: #fff; padding: 2.5rem 2rem; text-align: center; }
+        header h1 { font-size: 2rem; font-weight: 700; }
+        header p { margin-top: 0.5rem; font-size: 1rem; opacity: 0.9; }
+        .badges { margin-top: 1.2rem; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
         .badge-live { background: #4CAF50; color: white; }
-        .badge-soon { background: rgba(255,255,255,0.15); color: white; }
-        main { max-width: 900px; margin: 2.5rem auto; padding: 0 1.5rem 4rem; }
+        .badge-review { background: #FF9800; color: white; }
+        .badge-flutter { background: rgba(255,255,255,0.25); color: white; }
+        main { max-width: 960px; margin: 2.5rem auto; padding: 0 1.5rem 4rem; }
         .section-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #57606a; margin: 2.5rem 0 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid #d0d7de; }
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
-        a.card { background: #ffffff; border: 1px solid #d0d7de; border-radius: 10px; padding: 1.2rem 1.4rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 0.5rem; transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s; }
-        a.card:hover { box-shadow: 0 4px 16px rgba(108,99,255,0.15); border-color: #6C63FF; transform: translateY(-2px); }
+        a.card { background: #fff; border: 1px solid #d0d7de; border-radius: 10px; padding: 1.2rem 1.4rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 0.5rem; transition: box-shadow 0.15s, transform 0.15s; }
+        a.card:hover { box-shadow: 0 4px 16px rgba(108,99,255,0.15); transform: translateY(-2px); }
         .card-label { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 4px; width: fit-content; }
+        .label-live    { background: #d1f0db; color: #1a7f37; }
+        .label-review  { background: #fff3cd; color: #856404; }
         .label-doc     { background: #ddf4ff; color: #0969da; }
+        .label-feature { background: #ffecd2; color: #b35900; }
+        .label-music   { background: #fff0f6; color: #bf3989; }
         .label-policy  { background: #d1f0db; color: #1a7f37; }
         .label-devlog  { background: #fff3cd; color: #856404; }
-        .label-agent   { background: #ffe4f0; color: #bf3989; }
-        .label-setup   { background: #ede8ff; color: #6C63FF; }
-        .label-feature { background: #ffecd2; color: #b35900; }
-        .label-store   { background: #d1f0db; color: #1a7f37; }
-        .label-soon    { background: #f0f0f0; color: #666; }
-        .label-music   { background: #fff0f6; color: #bf3989; }
-        .card-title { font-size: 0.97rem; font-weight: 600; color: #24292e; line-height: 1.4; }
-        .card-desc { font-size: 0.83rem; color: #57606a; line-height: 1.5; }
+        .label-agent   { background: #ede8ff; color: #6C63FF; }
+        .card-title { font-size: 0.97rem; font-weight: 600; color: #24292e; }
+        .card-desc  { font-size: 0.83rem; color: #57606a; line-height: 1.5; }
         footer { text-align: center; padding: 2rem; font-size: 0.82rem; color: #57606a; border-top: 1px solid #d0d7de; }
         footer a { color: #6C63FF; text-decoration: none; }
     </style>
 </head>
 <body>
 <header>
-    <h1>🌙 SleepWell</h1>
+    <div style="font-size:3rem">🌙</div>
+    <h1>SleepWell</h1>
     <p>Sleep Better. Live Better. — Flutter App for Android & iOS</p>
-    <div class="platform-badges">
-        <span class="badge badge-android">🤖 Android</span>
-        <span class="badge badge-live">✅ Live on Play Store</span>
-        <span class="badge badge-ios">🍎 iOS</span>
-        <span class="badge badge-soon">🔄 App Store Coming Soon</span>
+    <div class="badges">
+        <span class="badge badge-flutter">Flutter 3.41.7</span>
+        <span class="badge badge-live">✅ Android — Live on Play Store</span>
+        <span class="badge badge-review">🔄 iOS — Under App Store Review</span>
     </div>
 </header>
+
 <main>
-
-    <div class="section-title">App Information</div>
-    <div class="card-grid">
-        <a class="card" href="privacy-policy.html">
-            <span class="card-label label-policy">Privacy Policy</span>
-            <span class="card-title">Privacy Policy</span>
-            <span class="card-desc">How SleepWell handles your data. All data stored locally on your device. No tracking, no ads.</span>
-        </a>
-        <a class="card" href="DEVLOG.md">
-            <span class="card-label label-devlog">Dev Log</span>
-            <span class="card-title">Development Log</span>
-            <span class="card-desc">Complete development history, tech stack, all bugs fixed, and lessons learned building for Android & iOS.</span>
-        </a>
-    </div>
-
-    <div class="section-title">Platform Downloads</div>
+    <div class="section-title">Download</div>
     <div class="card-grid">
         <a class="card" href="https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell">
-            <span class="card-label label-store">🤖 Android</span>
-            <span class="card-title">Google Play Store</span>
-            <span class="card-desc">Download SleepWell for Android. Free, no ads, no account required. Live now!</span>
+            <span class="card-label label-live">✅ Live Now</span>
+            <span class="card-title">🤖 Google Play Store</span>
+            <span class="card-desc">Download SleepWell for Android. Free, no ads, no account required.</span>
         </a>
         <a class="card" href="#">
-            <span class="card-label label-soon">🍎 iOS</span>
-            <span class="card-title">Apple App Store</span>
-            <span class="card-desc">iOS version coming soon to the App Store. Same features, same beautiful design.</span>
+            <span class="card-label label-review">🔄 Under Review</span>
+            <span class="card-title">🍎 Apple App Store</span>
+            <span class="card-desc">Submitted April 17, 2026. Awaiting Apple review. Coming very soon!</span>
         </a>
     </div>
 
@@ -82,69 +66,80 @@
     <div class="card-grid">
         <a class="card" href="https://github.com/AshBornCommander/sleep-tracker/blob/master/lib/screens/home_screen.dart">
             <span class="card-label label-feature">Screen</span>
-            <span class="card-title">Home Screen</span>
-            <span class="card-desc">Sleep logging, score card, quick stats, theme toggle. Works on Android & iOS.</span>
+            <span class="card-title">🏠 Home Screen</span>
+            <span class="card-desc">Sleep logging, score card, quick stats, music player, theme toggle.</span>
         </a>
         <a class="card" href="https://github.com/AshBornCommander/sleep-tracker/blob/master/lib/screens/calendar_screen.dart">
             <span class="card-label label-feature">Screen</span>
-            <span class="card-title">Sleep Calendar</span>
-            <span class="card-desc">Monthly calendar with color-coded sleep quality. Tap any date to log sleep.</span>
+            <span class="card-title">📅 Sleep Calendar</span>
+            <span class="card-desc">Monthly calendar with color-coded sleep quality indicators.</span>
         </a>
         <a class="card" href="https://github.com/AshBornCommander/sleep-tracker/blob/master/lib/screens/report_screen.dart">
             <span class="card-label label-feature">Screen</span>
-            <span class="card-title">Weekly Report</span>
-            <span class="card-desc">Bar chart, sleep risk analysis, personalized tips, and email report feature.</span>
+            <span class="card-title">📊 Weekly Report</span>
+            <span class="card-desc">Bar chart, sleep risk analysis, personalized tips and email report.</span>
         </a>
         <a class="card" href="https://github.com/AshBornCommander/sleep-tracker/blob/master/lib/screens/about_screen.dart">
             <span class="card-label label-feature">Screen</span>
-            <span class="card-title">About Screen</span>
-            <span class="card-desc">Profile, notifications, email report, native share sheet, Play Store / App Store review.</span>
+            <span class="card-title">👤 About & Profile</span>
+            <span class="card-desc">Profile, notifications, share app, rate on store, email weekly report.</span>
         </a>
     </div>
 
-    <div class="section-title">Music & Audio</div>
+    <div class="section-title">Ambient Music</div>
     <div class="card-grid">
-        <a class="card" href="https://github.com/AshBornCommander/sleep-tracker/blob/master/lib/services/audio_service.dart">
+        <a class="card" href="#">
             <span class="card-label label-music">✨ Default</span>
             <span class="card-title">Ethereal Dreams</span>
-            <span class="card-desc">Dreamy pentatonic ambient with pads, shimmer and reverb. Default track.</span>
+            <span class="card-desc">90s dreamy ambient with pentatonic melody, pads and reverb.</span>
         </a>
-        <a class="card" href="https://github.com/AshBornCommander/sleep-tracker/blob/master/lib/services/audio_service.dart">
+        <a class="card" href="#">
             <span class="card-label label-music">🎷 Jazz</span>
             <span class="card-title">Smooth Jazz</span>
-            <span class="card-desc">Soft piano jazz with Cmaj7 progressions for peaceful sleep.</span>
+            <span class="card-desc">Soft Cmaj7 piano jazz progression for peaceful sleep.</span>
         </a>
-        <a class="card" href="https://github.com/AshBornCommander/sleep-tracker/blob/master/lib/services/audio_service.dart">
+        <a class="card" href="#">
             <span class="card-label label-music">🌙 Ambient</span>
-            <span class="card-title">Deep Sleep + Ocean Waves</span>
-            <span class="card-desc">432Hz healing tones and soothing ocean waves for deep relaxation.</span>
+            <span class="card-title">Deep Sleep</span>
+            <span class="card-desc">432Hz healing tones for deep relaxation and sleep.</span>
         </a>
-        <a class="card" href="MUSIC_SETUP.md">
-            <span class="card-label label-setup">Setup Guide</span>
-            <span class="card-title">Music Setup Guide</span>
-            <span class="card-desc">How all 4 ambient tracks were generated using Python and integrated into Flutter.</span>
+        <a class="card" href="#">
+            <span class="card-label label-music">🌊 Nature</span>
+            <span class="card-title">Ocean Waves</span>
+            <span class="card-desc">Soothing ocean waves for a peaceful sleep environment.</span>
         </a>
     </div>
 
-    <div class="section-title">Developer Resources</div>
+    <div class="section-title">Documentation</div>
     <div class="card-grid">
+        <a class="card" href="privacy-policy.html">
+            <span class="card-label label-policy">Privacy</span>
+            <span class="card-title">Privacy Policy</span>
+            <span class="card-desc">All data stored locally. No tracking, no ads, no servers.</span>
+        </a>
+        <a class="card" href="DEVLOG.md">
+            <span class="card-label label-devlog">Dev Log</span>
+            <span class="card-title">Development Log</span>
+            <span class="card-desc">Full history — Android build, iOS port, bugs fixed, lessons learned.</span>
+        </a>
         <a class="card" href="FlutterForge_Agent_Prompt.md">
             <span class="card-label label-agent">AI Agent</span>
-            <span class="card-title">FlutterForge Agent Prompt</span>
-            <span class="card-desc">Master AI prompt for building any Flutter Android + iOS app from scratch to store submission.</span>
+            <span class="card-title">FlutterForge Prompt</span>
+            <span class="card-desc">Master AI prompt for building Flutter apps from scratch to store.</span>
         </a>
         <a class="card" href="https://github.com/AshBornCommander/sleep-tracker">
             <span class="card-label label-doc">Source Code</span>
             <span class="card-title">GitHub Repository</span>
-            <span class="card-desc">Complete Flutter source code. One codebase for Android & iOS. Flutter 3.41.7.</span>
+            <span class="card-desc">Complete Flutter source. One codebase for Android & iOS.</span>
         </a>
     </div>
-
 </main>
+
 <footer>
     &copy; 2026 SleepWell &mdash; Built by
     <a href="https://github.com/AshBornCommander">Pavan Kumar Malladi</a>
-    &nbsp;&middot;&nbsp; Android & iOS &nbsp;&middot;&nbsp; Sleep Better. Live Better. 🌙
+    &nbsp;&middot;&nbsp; Peoria, Arizona
+    &nbsp;&middot;&nbsp; Sleep Better. Live Better. 🌙
 </footer>
 </body>
 </html>

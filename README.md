@@ -6,16 +6,18 @@ A Flutter app for **Android & iOS** that helps you track daily sleep patterns, g
 [![Dart](https://img.shields.io/badge/Dart-3.11.4-blue?logo=dart)](https://dart.dev)
 [![Android](https://img.shields.io/badge/Android-6.0+-green?logo=android)](https://android.com)
 [![iOS](https://img.shields.io/badge/iOS-13.0+-black?logo=apple)](https://apple.com)
-[![Play Store](https://img.shields.io/badge/Google%20Play-Available-brightgreen?logo=google-play)](https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell)
+[![Play Store](https://img.shields.io/badge/Google%20Play-Live-brightgreen?logo=google-play)](https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell)
+[![App Store](https://img.shields.io/badge/App%20Store-Under%20Review-orange?logo=apple)](https://apps.apple.com)
 [![License](https://img.shields.io/badge/License-MIT-purple)](LICENSE)
 
 ---
 
-## 📱 Screenshots
+## 📲 Download
 
-| Home Screen | Sleep Calendar | Weekly Report | About Screen |
-|:-----------:|:--------------:|:-------------:|:------------:|
-| ![Home](assets/screenshots/home.jpg) | ![Calendar](assets/screenshots/calendar.jpg) | ![Report](assets/screenshots/report.jpg) | ![About](assets/screenshots/about.jpg) |
+| Platform | Status | Link |
+|----------|--------|------|
+| 🤖 Android | ✅ Live | [Google Play Store](https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell) |
+| 🍎 iOS | 🔄 Under Review | App Store — Coming Soon |
 
 ---
 
@@ -38,7 +40,7 @@ A Flutter app for **Android & iOS** that helps you track daily sleep patterns, g
 - Visual legend (Critical / Low / Good / High)
 
 ### 🎵 Ambient Music (4 Tracks)
-- ✨ Ethereal Dreams — default dreamy ambient
+- ✨ Ethereal Dreams — default dreamy ambient (90s loop)
 - 🎷 Smooth Jazz — soft piano jazz
 - 🌙 Deep Sleep — 432Hz healing tones
 - 🌊 Ocean Waves — soothing ocean sounds
@@ -50,7 +52,7 @@ A Flutter app for **Android & iOS** that helps you track daily sleep patterns, g
 - Status bar adapts to theme on all screens
 
 ### 🔔 Notifications
-- Daily 8AM sleep log reminder
+- Daily 8:25 AM sleep log reminder
 - Monday weekly report notification
 - Toggle on/off from About screen
 
@@ -76,7 +78,7 @@ A Flutter app for **Android & iOS** that helps you track daily sleep patterns, g
 | Charts | fl_chart |
 | Audio | audioplayers |
 | Fonts | Google Fonts (Poppins) |
-| Notifications | flutter_local_notifications |
+| Notifications | flutter_local_notifications 17.2.4 |
 | Review | in_app_review |
 | Email/URLs | url_launcher |
 | Share | share_plus |
@@ -99,7 +101,7 @@ flutter pub get
 # Android
 flutter run -d <android_device>
 
-# iOS (requires Mac + Xcode)
+# iOS (requires Mac + Xcode 16+)
 cd ios && pod install && cd ..
 flutter run -d <ios_device>
 
@@ -120,7 +122,7 @@ lib/
 ├── theme/
 │   └── app_theme.dart           # Colors, themes, status bar
 ├── utils/
-│   └── responsive.dart          # R class - all responsive sizing
+│   └── responsive.dart          # R class - responsive sizing
 ├── screens/
 │   ├── splash_screen.dart
 │   ├── onboarding_screen.dart
@@ -144,42 +146,56 @@ assets/
 
 ---
 
-## 🎨 Design System
-
-```
-Background:  #0A0E21  (midnight blue - night)
-Card:        #1D1E33  (dark navy)
-Primary:     #6C63FF  (purple)
-Accent:      #00D2FF  (cyan)
-Font:        Poppins (Google Fonts)
-```
-
----
-
 ## 📦 Dependencies
 
 ```yaml
 dependencies:
-  google_fonts: ^6.0.0
-  shared_preferences: ^2.0.0
-  fl_chart: ^0.68.0
-  audioplayers: ^6.0.0
-  image_picker: ^1.0.0
-  flutter_local_notifications: ^17.0.0
-  timezone: ^0.9.0
-  in_app_review: ^2.0.0
-  url_launcher: ^6.0.0
-  share_plus: ^10.0.0
+  google_fonts: ^8.0.2
+  shared_preferences: ^2.5.5
+  fl_chart: ^1.2.0
+  audioplayers: ^6.6.0
+  image_picker: ^1.2.1
+  flutter_local_notifications: 17.2.4
+  timezone: 0.9.4
+  in_app_review: ^2.0.11
+  url_launcher: ^6.3.2
+  share_plus: ^13.0.0
 ```
 
 ---
 
-## 📲 Platform Support
+## 🎨 Design System
 
-| Platform | Status | Store |
-|----------|--------|-------|
-| Android  | ✅ Live | [Google Play](https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell) |
-| iOS      | 🔄 Coming Soon | App Store |
+```
+Night Background:  #0A0E21  (midnight blue)
+Card:              #1D1E33  (dark navy)
+Primary:           #6C63FF  (purple)
+Accent:            #00D2FF  (cyan)
+Morning Background:#FFF8F0  (warm white)
+Midday Background: #F0F4FF  (cool white)
+Font:              Poppins (Google Fonts)
+```
+
+---
+
+## 🏪 Store Information
+
+### Google Play Store
+```
+Package:     com.pavankumar.sleepwell
+Version:     1.0.0
+Status:      Live ✅
+Link:        https://play.google.com/store/apps/details?id=com.pavankumar.sleepwell
+```
+
+### Apple App Store
+```
+Bundle ID:   com.pavankumar.sleepwell
+Version:     1.0.0
+Status:      Under Review 🔄
+Name:        SleepWell: Sleep Better
+Submitted:   April 17, 2026
+```
 
 ---
 
@@ -198,17 +214,17 @@ dependencies:
 
 | Document | Description |
 |----------|-------------|
-| [Live Docs](https://ashborncommander.github.io/sleep-tracker/) | Full documentation index |
+| [Live Docs](https://ashborncommander.github.io/sleep-tracker/) | Full documentation site |
 | [Privacy Policy](https://ashborncommander.github.io/sleep-tracker/privacy-policy.html) | Data handling |
-| [Dev Log](DEVLOG.md) | Development history and lessons |
-| [FlutterForge Agent](FlutterForge_Agent_Prompt.md) | AI prompt for building Flutter apps |
+| [Dev Log](DEVLOG.md) | Development history |
+| [FlutterForge Agent](FlutterForge_Agent_Prompt.md) | AI prompt for Flutter apps |
 
 ---
 
 ## 👨‍💻 Developer
 
 **Pavan Kumar Malladi**
-Data Engineer & App Developer — Phoenix, Arizona
+Data Engineer & App Developer — Peoria, Arizona
 
 - GitHub: [@AshBornCommander](https://github.com/AshBornCommander)
 - Email: pavankumarmalladi7@gmail.com
