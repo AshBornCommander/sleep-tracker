@@ -9,6 +9,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 import '../utils/responsive.dart';
 import '../services/notification_service.dart';
+import '../services/audio_service.dart';
+import '../screens/onboarding_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 
@@ -77,7 +79,6 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  // FIX 2: Real Play Store / App Store review
   Future<void> _requestReview() async {
     if (kIsWeb) {
       _showRateDialog(context);
@@ -100,9 +101,6 @@ class _AboutScreenState extends State<AboutScreen> {
       _showRateDialog(context);
     }
   }
-
-  // KEY FIX: Use Uri.encodeComponent for subject/body separately
-  // instead of queryParameters which adds + for spaces
 
   Future<void> _emailWeeklyReport() async {
     final prefs = await SharedPreferences.getInstance();
@@ -183,7 +181,6 @@ class _AboutScreenState extends State<AboutScreen> {
         'Sleep Better. Live Better.\n'
         'SleepWell App by Pavan Kumar Malladi';
 
-    // FIX: Build mailto URL manually to avoid + encoding
     final mailtoUrl =
         'mailto:$email'
         '?subject=${Uri.encodeComponent(subject)}'
@@ -213,23 +210,12 @@ class _AboutScreenState extends State<AboutScreen> {
     final now = DateTime.now();
     final start = now.subtract(const Duration(days: 6));
     const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
     ];
     return '${months[start.month - 1]} ${start.day} - ${months[now.month - 1]} ${now.day}';
   }
 
-  // FIX 3: Share - platform aware
   Future<void> _shareApp() async {
     try {
       if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -262,6 +248,114 @@ class _AboutScreenState extends State<AboutScreen> {
     } else {
       await NotificationService().cancelAll();
       _showSnack('Notifications disabled', AppTheme.textSecondary);
+    }
+  }
+
+  // ✅ NEW: Delete all data — required by Apple App Store guideline 5.1.1
+  Future<void> _deleteAllData() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.all(R.sp(24)),
+          decoration: BoxDecoration(
+            color: AppTheme.cardColor,
+            borderRadius: BorderRadius.circular(R.sp(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.warning_rounded,
+                  color: const Color(0xFFFF6B6B), size: R.icon(48)),
+              SizedBox(height: R.sp(16)),
+              Text(
+                'Delete All Data?',
+                style: GoogleFonts.poppins(
+                  fontSize: R.font(18),
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              SizedBox(height: R.sp(8)),
+              Text(
+                'This will permanently delete your profile, sleep logs, and all app data. This action cannot be undone.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: R.font(13),
+                  color: AppTheme.textSecondary,
+                  height: 1.5,
+                ),
+              ),
+              SizedBox(height: R.sp(24)),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context, false),
+                      child: Container(
+                        height: R.sp(48),
+                        decoration: BoxDecoration(
+                          color: AppTheme.cardColor,
+                          borderRadius: BorderRadius.circular(R.sp(14)),
+                          border: Border.all(
+                              color: AppTheme.textSecondary.withOpacity(0.3)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Cancel',
+                            style: GoogleFonts.poppins(
+                              fontSize: R.font(14),
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: R.sp(12)),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context, true),
+                      child: Container(
+                        height: R.sp(48),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFF6B6B),
+                          borderRadius: BorderRadius.circular(R.sp(14)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Delete',
+                            style: GoogleFonts.poppins(
+                              fontSize: R.font(14),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (confirmed == true) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      await NotificationService().cancelAll();
+      await AudioService().stopPlayback();
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+          (route) => false,
+        );
+      }
     }
   }
 
@@ -314,6 +408,8 @@ class _AboutScreenState extends State<AboutScreen> {
               SizedBox(height: R.sp(16)),
               _buildShareCard(context),
               SizedBox(height: R.sp(16)),
+              _buildDeleteDataCard(), // ✅ NEW
+              SizedBox(height: R.sp(16)),
               _buildVersionCard(),
               SizedBox(height: R.sp(20)),
             ],
@@ -325,13 +421,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Widget _buildUserProfileCard() {
     final initials = _userName.isNotEmpty
-        ? _userName
-              .trim()
-              .split(' ')
-              .map((e) => e[0])
-              .take(2)
-              .join()
-              .toUpperCase()
+        ? _userName.trim().split(' ').map((e) => e[0]).take(2).join().toUpperCase()
         : 'U';
     return Container(
       width: double.infinity,
@@ -343,14 +433,11 @@ class _AboutScreenState extends State<AboutScreen> {
       ),
       child: Column(
         children: [
-          Text(
-            'Your Profile',
-            style: GoogleFonts.poppins(
-              fontSize: R.font(15),
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
-            ),
-          ),
+          Text('Your Profile',
+              style: GoogleFonts.poppins(
+                  fontSize: R.font(15),
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary)),
           SizedBox(height: R.sp(16)),
           Stack(
             children: [
@@ -366,19 +453,15 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                   child: ClipOval(
                     child: _userPhotoPath != null && !kIsWeb
-                        ? Image.file(
-                            File(_userPhotoPath!),
+                        ? Image.file(File(_userPhotoPath!),
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) =>
-                                _initialsWidget(initials),
-                          )
+                            errorBuilder: (_, __, ___) => _initialsWidget(initials))
                         : _initialsWidget(initials),
                   ),
                 ),
               ),
               Positioned(
-                bottom: 0,
-                right: 0,
+                bottom: 0, right: 0,
                 child: GestureDetector(
                   onTap: _pickPhoto,
                   child: Container(
@@ -388,34 +471,23 @@ class _AboutScreenState extends State<AboutScreen> {
                       shape: BoxShape.circle,
                       border: Border.all(color: AppTheme.background, width: 2),
                     ),
-                    child: Icon(
-                      Icons.camera_alt,
-                      color: Colors.white,
-                      size: R.icon(14),
-                    ),
+                    child: Icon(Icons.camera_alt, color: Colors.white, size: R.icon(14)),
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(height: R.sp(12)),
-          Text(
-            _displayName,
-            style: GoogleFonts.poppins(
-              fontSize: R.font(18),
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
-            ),
-          ),
+          Text(_displayName,
+              style: GoogleFonts.poppins(
+                  fontSize: R.font(18),
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary)),
           if (_userEmail.isNotEmpty) ...[
             SizedBox(height: R.sp(4)),
-            Text(
-              _userEmail,
-              style: GoogleFonts.poppins(
-                fontSize: R.font(12),
-                color: AppTheme.textSecondary,
-              ),
-            ),
+            Text(_userEmail,
+                style: GoogleFonts.poppins(
+                    fontSize: R.font(12), color: AppTheme.textSecondary)),
           ],
           SizedBox(height: R.sp(8)),
           Row(
@@ -430,10 +502,7 @@ class _AboutScreenState extends State<AboutScreen> {
           GestureDetector(
             onTap: _pickPhoto,
             child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: R.sp(20),
-                vertical: R.sp(10),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: R.sp(20), vertical: R.sp(10)),
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: AppTheme.gradientColors),
                 borderRadius: BorderRadius.circular(R.sp(20)),
@@ -446,10 +515,9 @@ class _AboutScreenState extends State<AboutScreen> {
                   Text(
                     _userPhotoPath != null ? 'Change Photo' : 'Upload Photo',
                     style: GoogleFonts.poppins(
-                      fontSize: R.font(13),
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                        fontSize: R.font(13),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ],
               ),
@@ -463,38 +531,28 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget _profileStat(String label, String value) {
     return Column(
       children: [
-        Text(
-          value,
-          style: GoogleFonts.poppins(
-            fontSize: R.font(16),
-            fontWeight: FontWeight.bold,
-            color: AppTheme.primaryColor,
-          ),
-        ),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: R.font(11),
-            color: AppTheme.textSecondary,
-          ),
-        ),
+        Text(value,
+            style: GoogleFonts.poppins(
+                fontSize: R.font(16),
+                fontWeight: FontWeight.bold,
+                color: AppTheme.primaryColor)),
+        Text(label,
+            style: GoogleFonts.poppins(
+                fontSize: R.font(11), color: AppTheme.textSecondary)),
       ],
     );
   }
 
   Widget _initialsWidget(String initials) => Container(
-    color: Colors.transparent,
-    child: Center(
-      child: Text(
-        initials,
-        style: GoogleFonts.poppins(
-          fontSize: R.font(32),
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+        color: Colors.transparent,
+        child: Center(
+          child: Text(initials,
+              style: GoogleFonts.poppins(
+                  fontSize: R.font(32),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildNotificationsCard() {
     return Container(
@@ -515,32 +573,23 @@ class _AboutScreenState extends State<AboutScreen> {
                   color: const Color(0xFF4CAF50).withOpacity(0.15),
                   borderRadius: BorderRadius.circular(R.sp(14)),
                 ),
-                child: Icon(
-                  Icons.notifications_active_outlined,
-                  color: const Color(0xFF4CAF50),
-                  size: R.icon(24),
-                ),
+                child: Icon(Icons.notifications_active_outlined,
+                    color: const Color(0xFF4CAF50), size: R.icon(24)),
               ),
               SizedBox(width: R.sp(14)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Sleep Reminders',
-                      style: GoogleFonts.poppins(
-                        fontSize: R.font(15),
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      'Daily 8AM + Monday weekly report',
-                      style: GoogleFonts.poppins(
-                        fontSize: R.font(11),
-                        color: AppTheme.textSecondary,
-                      ),
-                    ),
+                    Text('Sleep Reminders',
+                        style: GoogleFonts.poppins(
+                            fontSize: R.font(15),
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary)),
+                    Text('Daily 8AM + Monday weekly report',
+                        style: GoogleFonts.poppins(
+                            fontSize: R.font(11),
+                            color: AppTheme.textSecondary)),
                   ],
                 ),
               ),
@@ -561,20 +610,16 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.check_circle,
-                    color: const Color(0xFF4CAF50),
-                    size: R.icon(16),
-                  ),
+                  Icon(Icons.check_circle,
+                      color: const Color(0xFF4CAF50), size: R.icon(16)),
                   SizedBox(width: R.sp(8)),
                   Expanded(
                     child: Text(
                       '🌙 Daily reminder at 8:00 AM\n📊 Weekly report every Monday',
                       style: GoogleFonts.poppins(
-                        fontSize: R.font(11),
-                        color: AppTheme.textPrimary,
-                        height: 1.6,
-                      ),
+                          fontSize: R.font(11),
+                          color: AppTheme.textPrimary,
+                          height: 1.6),
                     ),
                   ),
                 ],
@@ -604,43 +649,32 @@ class _AboutScreenState extends State<AboutScreen> {
                 color: AppTheme.accentColor.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(R.sp(14)),
               ),
-              child: Icon(
-                Icons.email_outlined,
-                color: AppTheme.accentColor,
-                size: R.icon(24),
-              ),
+              child: Icon(Icons.email_outlined,
+                  color: AppTheme.accentColor, size: R.icon(24)),
             ),
             SizedBox(width: R.sp(14)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Email My Weekly Report',
-                    style: GoogleFonts.poppins(
-                      fontSize: R.font(15),
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
-                    ),
-                  ),
+                  Text('Email My Weekly Report',
+                      style: GoogleFonts.poppins(
+                          fontSize: R.font(15),
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textPrimary)),
                   Text(
                     _userEmail.isNotEmpty
                         ? 'Send to: $_userEmail'
                         : 'Add email in onboarding first',
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
-                      fontSize: R.font(11),
-                      color: AppTheme.textSecondary,
-                    ),
+                        fontSize: R.font(11), color: AppTheme.textSecondary),
                   ),
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: AppTheme.textSecondary,
-              size: R.icon(14),
-            ),
+            Icon(Icons.arrow_forward_ios,
+                color: AppTheme.textSecondary, size: R.icon(14)),
           ],
         ),
       ),
@@ -676,38 +710,27 @@ class _AboutScreenState extends State<AboutScreen> {
               border: Border.all(color: Colors.white, width: 3),
             ),
             child: ClipOval(
-              child: Image.asset(
-                'assets/developer.jpeg',
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: Colors.white.withOpacity(0.2),
-                  child: Icon(
-                    Icons.person_rounded,
-                    size: R.icon(50),
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              child: Image.asset('assets/developer.jpeg',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                        color: Colors.white.withOpacity(0.2),
+                        child: Icon(Icons.person_rounded,
+                            size: R.icon(50), color: Colors.white),
+                      )),
             ),
           ),
           SizedBox(height: R.sp(14)),
-          Text(
-            'Pavan Kumar Malladi',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              fontSize: R.font(20),
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
+          Text('Pavan Kumar Malladi',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                  fontSize: R.font(20),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
           SizedBox(height: R.sp(4)),
-          Text(
-            'Creator & Developer',
-            style: GoogleFonts.poppins(
-              fontSize: R.font(13),
-              color: Colors.white.withOpacity(0.8),
-            ),
-          ),
+          Text('Creator & Developer',
+              style: GoogleFonts.poppins(
+                  fontSize: R.font(13),
+                  color: Colors.white.withOpacity(0.8))),
           SizedBox(height: R.sp(12)),
           Wrap(
             spacing: R.sp(8),
@@ -716,31 +739,27 @@ class _AboutScreenState extends State<AboutScreen> {
             children: [_devBadge('Data Engineer'), _devBadge('App Developer')],
           ),
           SizedBox(height: R.sp(12)),
-          Text(
-            '"Built with passion to help the world sleep better"',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              fontSize: R.font(12),
-              color: Colors.white.withOpacity(0.8),
-              fontStyle: FontStyle.italic,
-            ),
-          ),
+          Text('"Built with passion to help the world sleep better"',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                  fontSize: R.font(12),
+                  color: Colors.white.withOpacity(0.8),
+                  fontStyle: FontStyle.italic)),
         ],
       ),
     );
   }
 
   Widget _devBadge(String label) => Container(
-    padding: EdgeInsets.symmetric(horizontal: R.sp(14), vertical: R.sp(7)),
-    decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.2),
-      borderRadius: BorderRadius.circular(R.sp(20)),
-    ),
-    child: Text(
-      label,
-      style: GoogleFonts.poppins(fontSize: R.font(12), color: Colors.white),
-    ),
-  );
+        padding: EdgeInsets.symmetric(horizontal: R.sp(14), vertical: R.sp(7)),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(R.sp(20)),
+        ),
+        child: Text(label,
+            style:
+                GoogleFonts.poppins(fontSize: R.font(12), color: Colors.white)),
+      );
 
   Widget _buildAppInfoCard() {
     return Container(
@@ -761,32 +780,23 @@ class _AboutScreenState extends State<AboutScreen> {
                   gradient: LinearGradient(colors: AppTheme.gradientColors),
                   borderRadius: BorderRadius.circular(R.sp(14)),
                 ),
-                child: Icon(
-                  Icons.nightlight_round,
-                  color: Colors.white,
-                  size: R.icon(22),
-                ),
+                child: Icon(Icons.nightlight_round,
+                    color: Colors.white, size: R.icon(22)),
               ),
               SizedBox(width: R.sp(14)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'SleepWell',
-                      style: GoogleFonts.poppins(
-                        fontSize: R.font(18),
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      'Sleep Better. Live Better.',
-                      style: GoogleFonts.poppins(
-                        fontSize: R.font(12),
-                        color: AppTheme.textSecondary,
-                      ),
-                    ),
+                    Text('SleepWell',
+                        style: GoogleFonts.poppins(
+                            fontSize: R.font(18),
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary)),
+                    Text('Sleep Better. Live Better.',
+                        style: GoogleFonts.poppins(
+                            fontSize: R.font(12),
+                            color: AppTheme.textSecondary)),
                   ],
                 ),
               ),
@@ -796,10 +806,9 @@ class _AboutScreenState extends State<AboutScreen> {
           Text(
             'SleepWell helps you track daily sleep patterns and get personalized recommendations based on your age and gender.',
             style: GoogleFonts.poppins(
-              fontSize: R.font(13),
-              color: AppTheme.textSecondary,
-              height: 1.5,
-            ),
+                fontSize: R.font(13),
+                color: AppTheme.textSecondary,
+                height: 1.5),
           ),
         ],
       ),
@@ -815,7 +824,8 @@ class _AboutScreenState extends State<AboutScreen> {
         decoration: BoxDecoration(
           color: AppTheme.cardColor,
           borderRadius: BorderRadius.circular(R.sp(24)),
-          border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.4)),
+          border:
+              Border.all(color: const Color(0xFFFFD700).withOpacity(0.4)),
         ),
         child: Row(
           children: [
@@ -825,11 +835,8 @@ class _AboutScreenState extends State<AboutScreen> {
                 color: const Color(0xFFFFD700).withOpacity(0.15),
                 borderRadius: BorderRadius.circular(R.sp(14)),
               ),
-              child: Icon(
-                Icons.star_rounded,
-                color: const Color(0xFFFFD700),
-                size: R.icon(26),
-              ),
+              child: Icon(Icons.star_rounded,
+                  color: const Color(0xFFFFD700), size: R.icon(26)),
             ),
             SizedBox(width: R.sp(14)),
             Expanded(
@@ -841,26 +848,19 @@ class _AboutScreenState extends State<AboutScreen> {
                         ? 'Rate on App Store'
                         : 'Rate on Play Store',
                     style: GoogleFonts.poppins(
-                      fontSize: R.font(15),
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
-                    ),
+                        fontSize: R.font(15),
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary),
                   ),
-                  Text(
-                    'Opens official store review',
-                    style: GoogleFonts.poppins(
-                      fontSize: R.font(11),
-                      color: AppTheme.textSecondary,
-                    ),
-                  ),
+                  Text('Opens official store review',
+                      style: GoogleFonts.poppins(
+                          fontSize: R.font(11),
+                          color: AppTheme.textSecondary)),
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: AppTheme.textSecondary,
-              size: R.icon(14),
-            ),
+            Icon(Icons.arrow_forward_ios,
+                color: AppTheme.textSecondary, size: R.icon(14)),
           ],
         ),
       ),
@@ -886,40 +886,77 @@ class _AboutScreenState extends State<AboutScreen> {
                 color: AppTheme.accentColor.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(R.sp(14)),
               ),
-              child: Icon(
-                Icons.share_rounded,
-                color: AppTheme.accentColor,
-                size: R.icon(26),
-              ),
+              child: Icon(Icons.share_rounded,
+                  color: AppTheme.accentColor, size: R.icon(26)),
             ),
             SizedBox(width: R.sp(14)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Share SleepWell',
-                    style: GoogleFonts.poppins(
-                      fontSize: R.font(15),
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
-                    ),
-                  ),
-                  Text(
-                    'Help friends sleep better too!',
-                    style: GoogleFonts.poppins(
-                      fontSize: R.font(11),
-                      color: AppTheme.textSecondary,
-                    ),
-                  ),
+                  Text('Share SleepWell',
+                      style: GoogleFonts.poppins(
+                          fontSize: R.font(15),
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textPrimary)),
+                  Text('Help friends sleep better too!',
+                      style: GoogleFonts.poppins(
+                          fontSize: R.font(11),
+                          color: AppTheme.textSecondary)),
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: AppTheme.textSecondary,
-              size: R.icon(14),
+            Icon(Icons.arrow_forward_ios,
+                color: AppTheme.textSecondary, size: R.icon(14)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ✅ NEW: Delete data card — Apple guideline 5.1.1 compliance
+  Widget _buildDeleteDataCard() {
+    return GestureDetector(
+      onTap: _deleteAllData,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(R.sp(18)),
+        decoration: BoxDecoration(
+          color: AppTheme.cardColor,
+          borderRadius: BorderRadius.circular(R.sp(24)),
+          border:
+              Border.all(color: const Color(0xFFFF6B6B).withOpacity(0.3)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(R.sp(10)),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF6B6B).withOpacity(0.15),
+                borderRadius: BorderRadius.circular(R.sp(14)),
+              ),
+              child: Icon(Icons.delete_forever_rounded,
+                  color: const Color(0xFFFF6B6B), size: R.icon(24)),
             ),
+            SizedBox(width: R.sp(14)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Delete My Data',
+                      style: GoogleFonts.poppins(
+                          fontSize: R.font(15),
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFF6B6B))),
+                  Text('Permanently delete all your data',
+                      style: GoogleFonts.poppins(
+                          fontSize: R.font(11),
+                          color: AppTheme.textSecondary)),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios,
+                color: AppTheme.textSecondary, size: R.icon(14)),
           ],
         ),
       ),
@@ -938,9 +975,7 @@ class _AboutScreenState extends State<AboutScreen> {
           'SleepWell v1.0.0  •  Flutter  •  Pavan Kumar Malladi',
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
-            fontSize: R.font(10),
-            color: AppTheme.textSecondary,
-          ),
+              fontSize: R.font(10), color: AppTheme.textSecondary),
         ),
       ),
     );
@@ -962,37 +997,30 @@ class _AboutScreenState extends State<AboutScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Rate SleepWell',
-                  style: GoogleFonts.poppins(
-                    fontSize: R.font(20),
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
+                Text('Rate SleepWell',
+                    style: GoogleFonts.poppins(
+                        fontSize: R.font(20),
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary)),
                 SizedBox(height: R.sp(6)),
-                Text(
-                  'How would you rate us?',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    fontSize: R.font(13),
-                    color: AppTheme.textSecondary,
-                  ),
-                ),
+                Text('How would you rate us?',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                        fontSize: R.font(13),
+                        color: AppTheme.textSecondary)),
                 SizedBox(height: R.sp(20)),
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    final starSize = ((constraints.maxWidth - 40) / 5).clamp(
-                      28.0,
-                      42.0,
-                    );
+                    final starSize =
+                        ((constraints.maxWidth - 40) / 5).clamp(28.0, 42.0);
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(5, (i) {
                         return GestureDetector(
                           onTap: () => setState(() => selectedStars = i + 1),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: R.sp(4)),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: R.sp(4)),
                             child: Icon(
                               i < selectedStars
                                   ? Icons.star_rounded
@@ -1018,36 +1046,31 @@ class _AboutScreenState extends State<AboutScreen> {
                       ? 'Fair 😐'
                       : 'Poor 😕',
                   style: GoogleFonts.poppins(
-                    fontSize: R.font(15),
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
-                  ),
+                      fontSize: R.font(15),
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryColor),
                 ),
                 SizedBox(height: R.sp(20)),
                 GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                    _showSnack(
-                      'Thank you for $selectedStars stars! ⭐',
-                      const Color(0xFF4CAF50),
-                    );
+                    _showSnack('Thank you for $selectedStars stars! ⭐',
+                        const Color(0xFF4CAF50));
                   },
                   child: Container(
                     width: double.infinity,
                     height: R.sp(50),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: AppTheme.gradientColors),
+                      gradient:
+                          LinearGradient(colors: AppTheme.gradientColors),
                       borderRadius: BorderRadius.circular(R.sp(16)),
                     ),
                     child: Center(
-                      child: Text(
-                        'Submit Review',
-                        style: GoogleFonts.poppins(
-                          fontSize: R.font(15),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: Text('Submit Review',
+                          style: GoogleFonts.poppins(
+                              fontSize: R.font(15),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                     ),
                   ),
                 ),
